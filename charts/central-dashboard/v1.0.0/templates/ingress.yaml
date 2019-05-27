@@ -4,10 +4,10 @@ kind: Ingress
 metadata:
   name: dashboard-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2 permanent
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/configuration-snippet: |
-       rewrite ^/dashboard(/|$)(.*) /$2 permanent;
+       rewrite ^/dashboard(/|$)(.*) /$2 break;
 spec:
   rules:
   - host: npa-elb-681193061.us-west-2.elb.amazonaws.com 

@@ -81,6 +81,24 @@ spec:
             - name: dashboard-configmap
               mountPath: /config/dashboards/layout.erb
               subPath: layout.erb
+            - name: dashboard-configmap
+              mountPath: /config/widgets/text/text.coffee
+              subPath: text.coffee
+            - name: dashboard-configmap
+              mountPath: /config/widgets/text/text.html
+              subPath: text.html
+            - name: dashboard-configmap
+              mountPath: /config/widgets/text/text.scss
+              subPath: text.scss
+            - name: dashboard-configmap
+              mountPath: /config/widgets/image/image.coffee
+              subPath: image.coffee
+            - name: dashboard-configmap
+              mountPath: /config/widgets/image/image.html
+              subPath: image.html
+            - name: dashboard-configmap
+              mountPath: /config/widgets/image/image.scss
+              subPath: image.scss
       containers:
         - name: central-dashboard
           image: {{ .Values.centralDashboard.imageName }}:{{ .Values.centralDashboard.imageTag }}
