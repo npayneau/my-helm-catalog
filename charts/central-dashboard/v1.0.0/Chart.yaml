@@ -1,0 +1,8 @@
+name: central-dashboard
+# Version du chart
+version: 0.0.1
+# Version de l'application
+appVersion: 1.0.0
+description: Deploy specific instance of smashing for central dashboard projects platform 
+home: https://github.com/Smashing/smashing
+icon: https://www.pinclipart.com/picdir/middle/38-389246_overview-clipart-document-review-dashboard-icon-white-png.png

@@ -1,0 +1,25 @@
+// ----------------------------------------------------------------------------
+// Sass declarations
+// ----------------------------------------------------------------------------
+$background-color:  #4b4b4b;
+
+// ----------------------------------------------------------------------------
+// Widget-image styles
+// ----------------------------------------------------------------------------
+.widget-image {
+
+  background-color: $background-color;
+
+}
+
+.dead-status {
+  & a {
+    pointer-events: none;
+  }
+
+  & div.widget-image {
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+    background-color: rgba(128, 128, 128, 0.62)
+  }
+}

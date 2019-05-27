@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: central-dashboard-service
+spec:
+  ports:
+    - port: 3030
+  selector:
+    app: central-dashboard
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: central-dashboard-pv
+spec:
+  storageClassName: rook-ceph-block
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dashboard-configmap
+data:
+  {{- (.Files.Glob "files/*").AsConfig | nindent 2 }}
+  {{- (.Files.Glob "files/dashboards/*").AsConfig | nindent 2 }}
+  {{- (.Files.Glob "files/assets/fonts/*").AsConfig | nindent 2 }}
+  {{- (.Files.Glob "files/assets/images/*").AsConfig | nindent 2 }}
+  {{- (.Files.Glob "files/assets/javascripts/*").AsConfig | nindent 2 }}
+  {{- (.Files.Glob "files/assets/stylesheets/*").AsConfig | nindent 2 }}
+  {{- (.Files.Glob "files/widgets/**/*").AsConfig | nindent 2 }}
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: central-dashboard
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: central-dashboard
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      initContainers:
+        - name: init-myservice
+          image: busybox:1.28
+          command: ['sh', '-c', 'cp -R /config/* /smashing']
+          volumeMounts:
+            - mountPath: /smashing
+              name: central-dashboard-data
+            - mountPath: /config
+              name: central-dashboard-data
+            - name: dashboard-configmap
+              mountPath: /config/config.ru
+              subPath: config.ru
+            - name: dashboard-configmap
+              mountPath: /config/assets/javascripts/application.coffee
+              subPath: application.coffee
+            - name: dashboard-configmap
+              mountPath: /config/assets/stylesheets/application.scss
+              subPath: application.scss
+            - name: dashboard-configmap
+              mountPath: /config/dashboards/central.rb
+              subPath: central.rb
+            - name: dashboard-configmap
+              mountPath: /config/dashboards/central.erb
+              subPath: central.erb
+            - name: dashboard-configmap
+              mountPath: /config/dashboards/layout.erb
+              subPath: layout.erb
+      containers:
+        - name: central-dashboard
+          image: {{ .Values.centralDashboard.imageName }}:{{ .Values.centralDashboard.imageTag }}
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+          ports:
+            - containerPort: 3030
+          volumeMounts:
+            - mountPath: /smashing
+              name: central-dashboard-data
+            - mountPath: /config
+              name: central-dashboard-data
+              
+      volumes:
+        - name: central-dashboard-data
+          persistentVolumeClaim:
+            claimName: central-dashboard-pv
+        - name: dashboard-configmap
+          configMap:
+            name: dashboard-configmap
+          

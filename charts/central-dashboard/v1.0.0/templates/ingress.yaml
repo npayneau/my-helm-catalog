@@ -1,0 +1,14 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: dashboard-ingress
+spec:
+  rules:
+  - host: npa-elb-681193061.us-west-2.elb.amazonaws.com 
+    http:
+      paths:
+      - backend:
+          serviceName: central-dashboard-service
+          servicePort: 3030
+        path: /dashboard
