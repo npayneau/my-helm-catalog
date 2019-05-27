@@ -59,8 +59,10 @@ spec:
           volumeMounts:
             - mountPath: /smashing
               name: central-dashboard-data
+              subPath: smashing
             - mountPath: /config
               name: central-dashboard-data
+              subPath: config
             - name: dashboard-configmap
               mountPath: /config/config.ru
               subPath: config.ru
@@ -94,8 +96,7 @@ spec:
           volumeMounts:
             - mountPath: /smashing
               name: central-dashboard-data
-            - mountPath: /config
-              name: central-dashboard-data
+              subPath: smashing
               
       volumes:
         - name: central-dashboard-data
