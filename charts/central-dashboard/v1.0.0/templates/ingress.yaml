@@ -4,7 +4,7 @@ kind: Ingress
 metadata:
   name: dashboard-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /central
     kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
